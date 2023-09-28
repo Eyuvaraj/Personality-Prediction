@@ -14,7 +14,7 @@ st.set_page_config(
 
 # Add a title
 st.title("Personality Prediction App")
-st.markdown("#### :blue[Answer the following questions to predict your personality]")
+st.markdown("#### :red[Big 5 Personality Test]")
 st.divider()
 
 questions = {
@@ -84,6 +84,7 @@ user_responses = {}
 
 # Loop through the questions and generate the form elements with radio buttons
 with st.form("questions_form"):
+    st.subheader(":blue[Answer the following questions to predict your personality]")
     i=1
     for key, question in questions.items():
         user_response = st.radio(f"{i}  {question}", list(options_mapping.keys()))
