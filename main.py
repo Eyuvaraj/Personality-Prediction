@@ -14,8 +14,9 @@ st.set_page_config(
 
 # Add a title
 st.title("Personality Prediction App")
-st.markdown("#### :red[Big 5 Personality Test]")
-st.divider()
+st.subheader(":red[Big 5 personality test]")
+st.write("Welcome to the Personality Prediction App! Discover your personality traits and gain insights into your character based on the Big 5 Personality Test.")
+st.write("The Big 5 Personality Test, also known as the Five Factor Model, assesses five key dimensions of personality: Openness to Experience, Conscientiousness, Extraversion, Agreeableness, and Neuroticism. Each trait offers a unique perspective on your personality, helping you better understand yourself.")
 
 questions = {
     "EXT1": "I am the life of the party.",
@@ -84,36 +85,155 @@ user_responses = {}
 
 # Loop through the questions and generate the form elements with radio buttons
 with st.form("questions_form"):
-    st.subheader(":blue[Answer the following questions to predict your personality]")
-    i=1
+    st.subheader(
+        ":blue[Answer the following questions to predict your personality]")
+    i = 1
     for key, question in questions.items():
-        user_response = st.radio(f"{i}  {question}", list(options_mapping.keys()))
-        i+=1
+        user_response = st.radio(
+            f"{i} .  {question}", list(options_mapping.keys()))
+        i += 1
         st.divider()
         numerical_response = options_mapping[user_response]
         user_responses[key] = numerical_response
-    
+
     submitted = st.form_submit_button("Submit", use_container_width=True)
     if submitted:
         df = pd.DataFrame([user_responses])
-        
-        st.text("Your response:")
-        st.dataframe(df)
-        
+
         st.balloons()
-        st.write("Thank you!")
+        st.divider()
 
         # Make predictions using the loaded model
         user_personality = loaded_model.predict(df)
+        user_personality = int(user_personality)
 
         # Define a mapping of cluster numbers to personality types
         personality_types = {
-            0: "Extraversion (Outgoing/Energetic)",
-            1: "Neuroticism (Sensitive/Nervous)",
-            2: "Agreeableness (Friendly/Compassionate)",
-            3: "Conscientiousness (Efficient/Organized)",
-            4: "Openness to Experience (Inventive/Curious)"
+            0: ["Extraversion (Outgoing/Energetic)", "You have a strong sense of curiosity and imagination. You love exploring new ideas and experiences, making you open-minded and creative. You appreciate art, beauty, and different cultures, and you're always eager to try something new."],
+            1: ["Neuroticism (Sensitive/Nervous)", "You tend to be emotionally stable and resilient. Stress and worry don't easily get the better of you. You maintain a steady mood and have good control over your emotions, which allows you to navigate life's challenges with composure."],
+            2: ["Agreeableness (Friendly/Compassionate)", "Your compassion and cooperative spirit define your personality. You're naturally nurturing and kind, always willing to help and considerate of others. You value harmonious relationships and believe in the power of teamwork and compromise."],
+            3: ["Conscientiousness (Efficient/Organized)", "You are highly organized and responsible. Your diligence and reliability shine through in your daily life. You set and achieve goals effectively, and others can always count on you to keep your commitments."],
+            4: ["Openness to Experience (Inventive/Curious", "You have a strong sense of curiosity and imagination. You love exploring new ideas and experiences, making you open-minded and creative. You appreciate art, beauty, and different cultures, and you're always eager to try something new."]
         }
 
-        st.markdown("### My Personality Type: ", unsafe_allow_html=True)
-        st.markdown(f"#### {personality_types[int(user_personality)]}")
+        st.markdown("<span style='color:red; font-size:30px;'>Your Personality Type:</span>", unsafe_allow_html=True)
+        st.markdown(f"<span style='color: grey; font-size: 24px;'>{personality_types[user_personality][0]}</span>", unsafe_allow_html=True)
+        st.markdown(f"**{personality_types[user_personality][1]}**")
+
+        personality_traits_highs_n_lows = {
+            0: {
+                "Highs": [
+                    "Sociability",
+                    "Assertiveness",
+                    "Outgoing",
+                    "Enthusiasm in social settings."
+                ],
+                "Lows": [
+                    "Introversion",
+                    "Shyness",
+                    "Reticence in social situations",
+                    "Quiet demeanor."
+                ]
+            },
+            1: {
+                "Highs": [
+                    "Anxiety",
+                    "Moodiness",
+                    "Emotional reactivity",
+                    "Sensitivity to stress."
+                ],
+                "Lows": [
+                    "Emotional stability",
+                    "Resilience",
+                    "Calmness under pressure",
+                    "Even-temperedness."
+                ]
+            },
+            2: {
+                "Highs": [
+                    "Compassion",
+                    "Cooperation",
+                    "Politeness",
+                    "Empathy",
+                    "Nurturing nature."
+                ],
+                "Lows": [
+                    "Competitiveness",
+                    "Assertiveness",
+                    "Lack of consideration for others",
+                    "Conflict-prone."
+                ]
+            },
+            3: {
+                "Highs": [
+                    "Organization",
+                    "Responsibility",
+                    "Diligence",
+                    "Reliability",
+                    "Goal-oriented."
+                ],
+                "Lows": [
+                    "Disorganization",
+                    "Lack of responsibility",
+                    "Impulsiveness",
+                    "Unreliability."
+                ]
+            },
+            4: {
+                "Highs": [
+                    "Curiosity",
+                    "Creativity",
+                    "Open-mindedness",
+                    "Appreciation of art and novelty."
+                ],
+                "Lows": [
+                    "Resistance to change",
+                    "Preference for routine",
+                    "Reluctance to explore new ideas."
+                ]
+            }
+        }
+
+        col1, col2 = st.columns(2)
+
+        image_dict={
+            0:"extraversion.jpeg",
+            1:"neutoticism.jpeg",
+            2:"agreeableness.jpeg",
+            3:"conscientiousness.jpeg",
+            4:"openness.jpeg",
+        }
+
+        with col1:
+            image=image_dict[user_personality]
+            st.image(image, use_column_width=True)
+
+
+        with col2:
+            st.markdown("<p style='font-size:20px;'>Your Highs and Lows : </p>", unsafe_allow_html=True)
+            html_table = """
+            <table>
+            <tr>
+                <th>Highs</th>
+                <th>Lows</th>
+            </tr>
+            """
+
+            item=personality_traits_highs_n_lows[user_personality]
+            highs=item["Highs"]
+            lows=item["Lows"]
+            for highs,lows in zip(highs,lows):
+                html_table += f"""
+            <tr>
+                <td>{highs}</td>
+                <td>{lows}</td>
+            </tr>
+            """
+
+            html_table += "</table>"
+
+            st.write(html_table, unsafe_allow_html=True)
+
+
+        with st.container():
+            st.write("Visit https://en.wikipedia.org/wiki/Big_Five_personality_traits to know more!")
