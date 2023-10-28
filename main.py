@@ -14,9 +14,10 @@ st.set_page_config(
 
 # Add a title
 st.title("Personality Prediction App")
-st.subheader(":red[Big 5 personality test]")
-st.write("Welcome to the Personality Prediction App! Discover your personality traits and gain insights into your character based on the Big 5 Personality Test.")
-st.write("The Big 5 Personality Test, also known as the Five Factor Model, assesses five key dimensions of personality: Openness to Experience, Conscientiousness, Extraversion, Agreeableness, and Neuroticism. Each trait offers a unique perspective on your personality, helping you better understand yourself.")
+with st.container():
+    st.subheader(":red[Big 5 personality test]")
+    st.write("Welcome to the Personality Prediction App! Discover your personality traits and gain insights into your character based on the Big 5 Personality Test.")
+    st.write("The Big 5 Personality Test, also known as the Five Factor Model, assesses five key dimensions of personality: Openness to Experience, Conscientiousness, Extraversion, Agreeableness, and Neuroticism. Each trait offers a unique perspective on your personality, helping you better understand yourself.")
 
 questions = {
     "EXT1": "I am the life of the party.",
